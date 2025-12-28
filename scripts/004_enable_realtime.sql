@@ -12,5 +12,5 @@ END $$;
 -- Add the orders table to the publication
 ALTER PUBLICATION supabase_realtime ADD TABLE orders;
 
--- Ensure replication is set to FULL if you want to see old values (not required for basic inserts/updates)
--- ALTER TABLE orders REPLICA IDENTITY FULL;
+-- Ensure replication is set to FULL so that old values (like created_at) are sent on DELETE
+ALTER TABLE orders REPLICA IDENTITY FULL;

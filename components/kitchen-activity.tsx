@@ -15,38 +15,42 @@ export function KitchenActivity({ initialData }: { initialData: HourlyData[] }) 
     const supabase = createClient()
 
     useEffect(() => {
-        // Refresh data when new orders come in
         const channel = supabase
-            .channel("kitchen-activity")
-            .on("postgres_changes", { event: "INSERT", schema: "public", table: "orders" }, async () => {
-                // Fetch updated hourly data
-                const today = new Date().toISOString().split("T")[0]
-                const { data: orders } = await supabase
-                    .from("orders")
-                    .select("created_at")
-                    .gte("created_at", today)
+            .channel("kitchen-activity-realtime")
+            .on("postgres_changes", { event: "INSERT", schema: "public", table: "orders" }, (payload) => {
+                const newOrderDate = new Date(payload.new.created_at)
+                const today = new Date()
 
-                if (orders) {
-                    // Group by hour
-                    const hourCounts: Record<string, number> = {}
+                // Only update if the order is from today
+                if (newOrderDate.toDateString() === today.toDateString()) {
+                    const hour = newOrderDate.getHours()
+                    const hourLabel = `${hour.toString().padStart(2, '0')}:00`
 
-                    orders.forEach((order) => {
-                        const hour = new Date(order.created_at).getHours()
+                    setChartData((prev) =>
+                        prev.map((item) =>
+                            item.hour === hourLabel
+                                ? { ...item, orders: item.orders + 1 }
+                                : item
+                        )
+                    )
+                }
+            })
+            .on("postgres_changes", { event: "DELETE", schema: "public", table: "orders" }, (payload) => {
+                // If an order is deleted, decrement the count
+                if (payload.old.created_at) {
+                    const deletedDate = new Date(payload.old.created_at)
+                    const today = new Date()
+                    if (deletedDate.toDateString() === today.toDateString()) {
+                        const hour = deletedDate.getHours()
                         const hourLabel = `${hour.toString().padStart(2, '0')}:00`
-                        hourCounts[hourLabel] = (hourCounts[hourLabel] || 0) + 1
-                    })
-
-                    // Convert to array and fill gaps
-                    const newData: HourlyData[] = []
-                    for (let h = 0; h < 24; h++) {
-                        const hourLabel = `${h.toString().padStart(2, '0')}:00`
-                        newData.push({
-                            hour: hourLabel,
-                            orders: hourCounts[hourLabel] || 0,
-                        })
+                        setChartData((prev) =>
+                            prev.map((item) =>
+                                item.hour === hourLabel
+                                    ? { ...item, orders: Math.max(0, item.orders - 1) }
+                                    : item
+                            )
+                        )
                     }
-
-                    setChartData(newData)
                 }
             })
             .subscribe()

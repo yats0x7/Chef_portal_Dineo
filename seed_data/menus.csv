@@ -1,0 +1,4 @@
+chef_id,name,description,is_active,id
+a4d08e7d-788a-4de1-a5f6-2a8ac7639aa1,Lunch Specials,Daily specials for lunch service.,TRUE,f6b8a100-1111-4444-8888-000000000001
+a4d08e7d-788a-4de1-a5f6-2a8ac7639aa1,Summer Dinner 2024,Fresh seasonal dinner menu.,TRUE,f6b8a100-1111-4444-8888-000000000002
+a4d08e7d-788a-4de1-a5f6-2a8ac7639aa1,Wine List,Current selection of wines.,FALSE,f6b8a100-1111-4444-8888-000000000003

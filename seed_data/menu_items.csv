@@ -1,0 +1,7 @@
+menu_id,name,description,price,category,is_available,id
+f6b8a100-1111-4444-8888-000000000001,Truffle Pasta,Handmade pappardelle with black truffle.,2100.00,Mains,TRUE,e1b8a100-0000-0000-0000-000000000001
+f6b8a100-1111-4444-8888-000000000001,Caesar Salad,Crisp romaine with parmesan crisp.,450.00,Starters,TRUE,e1b8a100-0000-0000-0000-000000000002
+f6b8a100-1111-4444-8888-000000000001,Iced Americano,Double shot espresso over ice.,250.00,Drinks,TRUE,e1b8a100-0000-0000-0000-000000000003
+f6b8a100-1111-4444-8888-000000000002,Steak Frites,Prime ribeye with rosemary fries.,2800.00,Mains,TRUE,e1b8a100-0000-0000-0000-000000000004
+f6b8a100-1111-4444-8888-000000000002,Chocolate Fondant,Molten dark chocolate cake.,650.00,Dessert,TRUE,e1b8a100-0000-0000-0000-000000000005
+f6b8a100-1111-4444-8888-000000000003,Cabernet Sauvignon,Full-bodied red wine.,1200.00,Wine,TRUE,e1b8a100-0000-0000-0000-000000000006

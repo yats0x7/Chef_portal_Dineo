@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -12,6 +11,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/hooks/use-toast"
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
+import { createClient } from "@/lib/supabase/client"
 
 export default function NewMenuPage() {
   const [name, setName] = useState("")
@@ -19,21 +19,37 @@ export default function NewMenuPage() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
+  const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800)) // simulate API call
+      const { data: { user } } = await supabase.auth.getUser()
+
+      // Fallback chef_id for local development if not logged in
+      const chef_id = user?.id || "a4d08e7d-788a-4de1-a5f6-2a8ac7639aa1"
+
+      const { error } = await supabase
+        .from("menus")
+        .insert([{
+          name,
+          description,
+          chef_id,
+          is_active: true
+        }])
+
+      if (error) throw error
 
       toast({ title: "Menu created", description: "Your new menu has been successfully created." })
       router.push("/dashboard/menus")
       router.refresh()
     } catch (error: any) {
+      console.error(error)
       toast({
         variant: "destructive",
         title: "Failed to create menu",
-        description: "An error occurred while creating the menu.",
+        description: error.message || "An error occurred while creating the menu.",
       })
     } finally {
       setIsLoading(false)

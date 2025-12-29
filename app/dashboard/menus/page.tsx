@@ -4,6 +4,7 @@ import { Plus, UtensilsCrossed, MoreHorizontal } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
+import { MenuActions } from "@/components/menu-actions"
 
 export default async function MenusPage() {
   const supabase = await createClient()
@@ -47,19 +48,7 @@ export default async function MenusPage() {
                       {menu.description || "No description provided."}
                     </CardDescription>
                   </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem asChild>
-                        <Link href={`/dashboard/menus/${menu.id}`}>Edit Details</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-destructive">Delete Menu</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <MenuActions menuId={menu.id} menuName={menu.name} />
                 </div>
               </CardHeader>
               <CardContent>
